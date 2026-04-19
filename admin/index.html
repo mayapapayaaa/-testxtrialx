@@ -213,3 +213,220 @@
   </div>
 
 </div>
+<script>
+  const SEED = [
+    { id:'s1', title:'The internet never forgot — it just stopped caring', dek:'A decade after the first meme went viral, we explore what it means to live online in an era of permanent, numbingly fast forgetting.', category:'culture', author:'Staff Writer', date:'19 Apr 2026', body:'We used to say the internet never forgets. It was meant as a warning — post something embarrassing and it lives forever, searchable, screenshot-able, eternal. But spend a week online now and you will notice something stranger has happened. The internet remembers everything and cares about almost none of it.\n\nThe feed moves so fast that a story which dominates a Tuesday morning is completely gone by Tuesday afternoon. Not deleted. Not retracted. Simply buried under the next wave of content, the next outrage, the next moment of collective attention.\n\nThis is the paradox of digital memory in 2026. The archive is infinite. The attention span is not. And so we live in a world of permanent record and permanent forgetting at the same time.\n\nWhat does that do to us? To the stories we tell, the mistakes we make, the people we hold accountable? These are not rhetorical questions. They are the questions that define what kind of culture we are building.' },
+    { id:'s2', title:'Democracy is not in crisis — it just looks different now', dek:'On participation, disillusionment, and why cynicism is the easy answer.', category:'opinion', author:'Staff Writer', date:'18 Apr 2026', body:'Every few years someone publishes a book declaring the death of democracy. It is a reliable genre. The covers are dark, the tone is urgent, the sales are strong.\n\nAnd yet here we are. Elections still happen. Governments still change. Courts still occasionally surprise us. The infrastructure of democracy is battered, no question — but the reports of its death have been greatly exaggerated.\n\nWhat has changed is participation and trust. People vote less, not everywhere, but in enough places to worry about. They trust institutions less. They believe their vote matters less. And that erosion of belief is its own kind of crisis, distinct from the formal machinery breaking down.' },
+    { id:'s3', title:'Norwegian underground: the sounds nobody is listening to yet', dek:'A guide to the artists shaping the next wave of Nordic music.', category:'music', author:'Staff Writer', date:'17 Apr 2026', body:'There is a corner of Oslo that does not care what the rest of the world thinks. Small venues, small runs, records pressed in editions of three hundred. Music made not for playlists but for rooms.\n\nNorwegian underground music has always operated this way. The country is small enough that artists cannot survive on local attention alone, but proud enough not to chase external approval too eagerly. The result is a scene that moves on its own logic.' },
+    { id:'s4', title:'What football taught me about failure', dek:'A personal essay on the pitch, the crowd, and the specific sadness of a near-miss.', category:'sports', author:'Staff Writer', date:'14 Apr 2026', body:'The first thing football teaches you is that you will lose. Not eventually. Regularly. Even the best teams in the world lose a third of their games. Even the best players in the world miss. The sport is structured around failure in a way that almost nothing else in life is.\n\nI grew up playing and then watching, and at some point the two activities merged into the same education. How to want something and not get it. How to try again. How to sit in the silence after a near-miss and resist the urge to explain it away.' },
+    { id:'s5', title:'The quiet election nobody talked about', dek:'Local politics shapes daily life more than any national headline — so why do we ignore it?', category:'politics', author:'Staff Writer', date:'13 Apr 2026', body:'Last autumn, a local council in a mid-sized European city voted on a zoning decision that will determine where five thousand families live for the next thirty years. The meeting lasted four hours. Twelve people attended.\n\nThe same week, a national politician said something mildly provocative on television. It dominated the news cycle for three days.\n\nThis is not a new observation. Journalists and political scientists have been making it for decades. Local politics is where decisions are made. National politics is where attention goes.' },
+    { id:'s6', title:'The short story is the most honest form of fiction', dek:'On compression, precision, and why the short form demands more than the novel.', category:'literature', author:'Staff Writer', date:'15 Apr 2026', body:'A novel can afford to be wrong for a hundred pages. It can meander, contradict itself, lose the thread and find it again. The reader will forgive this because the form allows it. There is time.\n\nThe short story has no such luxury. Every sentence is doing multiple jobs. Every word that does not earn its place weakens the whole. It is the most unforgiving form in fiction, which is probably why it is also, at its best, the most precise.' }
+  ];
+
+  let ARTICLES = [...SEED];
+  let lastPage = 'home';
+  let lastCat  = 'all';
+
+  function getSettings() {
+    return { token: localStorage.getItem('tx_token')||'', user: localStorage.getItem('tx_user')||'', repo: localStorage.getItem('tx_repo')||'' };
+  }
+
+  function saveToken() {
+    const token = document.getElementById('gh-token').value.trim();
+    const user  = document.getElementById('gh-user').value.trim();
+    const repo  = document.getElementById('gh-repo').value.trim();
+    if (!token || !user || !repo) { showMsg('token-msg','Please fill in all three fields.','error'); return; }
+    localStorage.setItem('tx_token', token);
+    localStorage.setItem('tx_user', user);
+    localStorage.setItem('tx_repo', repo);
+    showMsg('token-msg','✓ Settings saved!','success');
+    document.getElementById('token-box').style.opacity = '0.5';
+  }
+
+  async function fetchArticlesFromGithub() {
+    const { token, user, repo } = getSettings();
+    if (!token || !user || !repo) return null;
+    try {
+      const res = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/articles.json`, {
+        headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      const decoded = JSON.parse(atob(data.content.replace(/\n/g,'')));
+      return { articles: decoded, sha: data.sha };
+    } catch(e) { return null; }
+  }
+
+  async function saveArticlesToGithub(articles) {
+    const { token, user, repo } = getSettings();
+    const btn = document.getElementById('publish-btn');
+    btn.disabled = true; btn.textContent = 'Publishing...';
+    try {
+      let sha = null;
+      const existing = await fetchArticlesFromGithub();
+      if (existing) sha = existing.sha;
+      const content = btoa(unescape(encodeURIComponent(JSON.stringify(articles, null, 2))));
+      const body = { message: 'Update articles', content };
+      if (sha) body.sha = sha;
+      const res = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/articles.json`, {
+        method: 'PUT',
+        headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) { const err = await res.json(); throw new Error(err.message); }
+      showMsg('publish-msg','✓ Published! Site will update in about 30 seconds.','success');
+      ARTICLES = [...articles, ...SEED];
+      renderAdminList(articles);
+      return true;
+    } catch(e) {
+      showMsg('publish-msg',`Error: ${e.message}. Check your token and repo name.`,'error');
+      return false;
+    } finally {
+      btn.disabled = false; btn.textContent = 'Publish article';
+    }
+  }
+
+  function showMsg(id, text, type) {
+    const el = document.getElementById(id);
+    el.textContent = text; el.className = `adm-msg ${type}`; el.style.display = 'block';
+    if (type === 'success') setTimeout(() => el.style.display = 'none', 4000);
+  }
+
+  async function loadArticles() {
+    const result = await fetchArticlesFromGithub();
+    if (result && result.articles.length > 0) ARTICLES = [...result.articles, ...SEED];
+    else ARTICLES = [...SEED];
+    renderHome();
+  }
+
+  function readTime(body) { return Math.max(1, Math.round((body||'').split(' ').length / 200)); }
+  function setActiveNav(cat) { document.querySelectorAll('.tx-nav a').forEach(a => a.classList.toggle('active', a.dataset.cat === cat)); }
+  function hideAll() { ['page-home','page-category','page-article','page-admin'].forEach(id => document.getElementById(id).style.display = 'none'); }
+
+  function showHome() {
+    hideAll(); lastPage = 'home'; lastCat = 'all'; setActiveNav('all');
+    renderHome(); document.getElementById('page-home').style.display = 'block'; window.scrollTo(0,0);
+  }
+
+  function renderHome() {
+    const arts = ARTICLES;
+    if (!arts.length) { document.getElementById('home-grid').innerHTML = `<p style="padding:3rem 0;font-family:'Space Mono',monospace;font-size:11px;color:#aaa;">No articles yet.</p>`; return; }
+    const f = arts[0], side = arts.slice(1,5), bot = arts.slice(5,7);
+    document.getElementById('home-grid').innerHTML = `
+      <div class="tx-grid">
+        <div class="tx-featured">
+          <div class="tx-img-block"><span class="tx-img-label">[ Featured image ]</span></div>
+          <span class="tx-tag ${f.category}">${f.category}</span>
+          <div class="tx-headline-xl" onclick="showArticle('${f.id}')">${f.title}</div>
+          <p class="tx-dek">${f.dek||''}</p>
+          <div class="tx-byline">By ${f.author||'Staff Writer'} &nbsp;·&nbsp; ${f.date||''} &nbsp;·&nbsp; ${readTime(f.body)} min read</div>
+        </div>
+        <div class="tx-sidebar">
+          ${side.map(a=>`<div class="tx-sidebar-item">
+            <span class="tx-tag ${a.category}">${a.category}</span>
+            <div class="tx-headline-sm" onclick="showArticle('${a.id}')">${a.title}</div>
+            <div class="tx-byline">${a.date||''} · ${readTime(a.body)} min</div>
+          </div>`).join('')}
+        </div>
+        <div class="tx-bottom-row">
+          ${bot.map(a=>`<div class="tx-card">
+            <div class="tx-img-sm"><span class="tx-img-label">[ Image ]</span></div>
+            <span class="tx-tag ${a.category}">${a.category}</span>
+            <div class="tx-headline-md" onclick="showArticle('${a.id}')">${a.title}</div>
+            <p class="tx-dek">${a.dek||''}</p>
+            <div class="tx-byline">${a.date||''} · ${readTime(a.body)} min</div>
+          </div>`).join('')}
+        </div>
+      </div>`;
+  }
+
+  function showCategory(cat) {
+    hideAll(); lastPage = 'category'; lastCat = cat; setActiveNav(cat);
+    const arts = ARTICLES.filter(a => a.category === cat);
+    document.getElementById('cat-title').textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+    document.getElementById('cat-count').textContent = `${arts.length} article${arts.length!==1?'s':''}`;
+    document.getElementById('cat-grid').innerHTML = arts.length === 0
+      ? `<p class="cat-empty">No articles in this category yet.</p>`
+      : arts.map(a=>`<div class="cat-card" onclick="showArticle('${a.id}')">
+          <span class="tx-tag ${a.category}">${a.category}</span>
+          <div class="tx-headline-md" style="margin-top:4px;">${a.title}</div>
+          <p class="tx-dek" style="margin-top:8px;">${a.dek||''}</p>
+          <div class="tx-byline">${a.date||''} · ${readTime(a.body)} min read</div>
+        </div>`).join('');
+    document.getElementById('page-category').style.display = 'block'; window.scrollTo(0,0);
+  }
+
+  function showArticle(id) {
+    const art = ARTICLES.find(a => a.id === id);
+    if (!art) return;
+    hideAll();
+    document.getElementById('art-tag').innerHTML = `<span class="tx-tag ${art.category}">${art.category}</span>`;
+    document.getElementById('art-title').textContent = art.title;
+    document.getElementById('art-dek').textContent = art.dek||'';
+    document.getElementById('art-byline').textContent = `By ${art.author||'Staff Writer'} · ${art.date||''} · ${readTime(art.body)} min read`;
+    document.getElementById('art-body').innerHTML = art.body.split(/\n\n+/).map(p=>`<p>${p.trim()}</p>`).join('');
+    document.getElementById('page-article').style.display = 'block'; window.scrollTo(0,0);
+  }
+
+  function goBack() { if (lastPage === 'category') showCategory(lastCat); else showHome(); }
+
+  function showAdmin() {
+    hideAll(); setActiveNav('');
+    const s = getSettings();
+    if (s.token) {
+      document.getElementById('gh-token').value = s.token;
+      document.getElementById('gh-user').value  = s.user;
+      document.getElementById('gh-repo').value  = s.repo;
+      document.getElementById('token-box').style.opacity = '0.5';
+    }
+    fetchArticlesFromGithub().then(result => renderAdminList(result ? result.articles : []));
+    document.getElementById('page-admin').style.display = 'block'; window.scrollTo(0,0);
+  }
+
+  async function publishArticle() {
+    const title  = document.getElementById('adm-headline').value.trim();
+    const dek    = document.getElementById('adm-dek').value.trim();
+    const cat    = document.getElementById('adm-cat').value;
+    const author = document.getElementById('adm-author').value.trim() || 'Staff Writer';
+    const body   = document.getElementById('adm-body').value.trim();
+    if (!title || !body) { showMsg('publish-msg','Please add a headline and body text.','error'); return; }
+    const { token } = getSettings();
+    if (!token) { showMsg('publish-msg','Please save your GitHub settings first.','error'); return; }
+    const existing = await fetchArticlesFromGithub();
+    const current = existing ? existing.articles : [];
+    const newArt = { id:'c'+Date.now(), title, dek, category:cat, author, body,
+      date: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) };
+    await saveArticlesToGithub([newArt, ...current]);
+    clearForm();
+  }
+
+  async function deleteArticle(id) {
+    if (!confirm('Delete this article?')) return;
+    const existing = await fetchArticlesFromGithub();
+    if (!existing) return;
+    await saveArticlesToGithub(existing.articles.filter(a => a.id !== id));
+  }
+
+  function renderAdminList(articles) {
+    document.getElementById('adm-list').innerHTML = !articles || articles.length === 0
+      ? `<p style="font-family:'Space Mono',monospace;font-size:10px;color:#ccc;letter-spacing:0.08em;">No articles published yet.</p>`
+      : articles.map(a=>`<div class="adm-art-row">
+          <div><div class="adm-art-ttl">${a.title}</div><div class="adm-art-meta">${a.category} · ${a.date}</div></div>
+          <button class="adm-del" onclick="deleteArticle('${a.id}')">Delete</button>
+        </div>`).join('');
+  }
+
+  function clearForm() {
+    ['adm-headline','adm-dek','adm-author','adm-body'].forEach(id => document.getElementById(id).value='');
+    document.getElementById('adm-cat').value = 'culture';
+  }
+
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const now = new Date();
+  document.getElementById('topbar-date').textContent = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+
+  loadArticles();
+</script>
+</body>
+</html>
