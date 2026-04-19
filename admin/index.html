@@ -108,3 +108,108 @@
     }
   </style>
 </head>
+  <body>
+<div class="tx-wrap">
+
+  <div class="tx-topbar">
+    <span id="topbar-date"></span>
+    <div class="tx-topbar-right"><span>Issue No. 001</span><span>testxtrialx.netlify.app</span></div>
+  </div>
+
+  <div class="tx-header">
+    <div class="tx-logo" onclick="showHome()">TEST<span>X</span></div>
+    <div class="tx-tagline">Independent writing — culture, politics, debate &amp; beyond</div>
+  </div>
+
+  <nav class="tx-nav" id="main-nav">
+    <a onclick="showHome()" class="active" data-cat="all">All</a>
+    <a onclick="showCategory('culture')" data-cat="culture">Culture</a>
+    <a onclick="showCategory('politics')" data-cat="politics">Politics</a>
+    <a onclick="showCategory('opinion')" data-cat="opinion">Opinion</a>
+    <a onclick="showCategory('sports')" data-cat="sports">Sports</a>
+    <a onclick="showCategory('literature')" data-cat="literature">Literature</a>
+    <a onclick="showCategory('music')" data-cat="music">Music</a>
+    <a onclick="showCategory('debate')" data-cat="debate">Debate</a>
+  </nav>
+
+  <div id="page-home">
+    <div class="tx-ticker">
+      <span class="tx-ticker-inner">
+        NEW ISSUE OUT NOW <span class="tx-dot">◆</span> CULTURE &amp; COLLAPSE <span class="tx-dot">◆</span> WHO OWNS THE INTERNET? <span class="tx-dot">◆</span> THE RETURN OF THE LONG READ <span class="tx-dot">◆</span> DEBUT COLUMN: ON CITIES AND LONELINESS <span class="tx-dot">◆</span> MUSIC SECTION COMING SOON <span class="tx-dot">◆</span>
+      </span>
+    </div>
+    <div id="home-grid"></div>
+  </div>
+
+  <div id="page-category">
+    <div style="margin-top:1.5rem; display:flex; align-items:baseline; gap:12px;">
+      <span id="cat-title" style="font-family:'DM Serif Display',serif; font-size:28px;"></span>
+      <span id="cat-count" style="font-family:'Space Mono',monospace; font-size:10px; color:#aaa;"></span>
+    </div>
+    <div id="cat-grid" class="cat-grid"></div>
+  </div>
+
+  <div id="page-article">
+    <span class="art-back" onclick="goBack()">← Back</span>
+    <div class="art-header">
+      <div id="art-tag"></div>
+      <div id="art-title" class="art-title"></div>
+      <div id="art-dek" class="art-dek"></div>
+      <div id="art-byline" class="art-byline-line"></div>
+    </div>
+    <div id="art-body" class="art-body"></div>
+  </div>
+
+  <div id="page-admin">
+    <span class="art-back" onclick="showHome()">← Back to site</span>
+    <div class="adm-wrap">
+      <div class="adm-title">Editor</div>
+      <div class="adm-sub">Write &amp; publish articles to the live site</div>
+      <div class="adm-token-box" id="token-box">
+        <div class="adm-token-note">To publish articles publicly, paste your GitHub Personal Access Token below. This is stored only in your browser and never shared. You only need to do this once.</div>
+        <label class="adm-label">GitHub token</label>
+        <input class="adm-input" id="gh-token" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" style="margin-bottom:8px;" />
+        <label class="adm-label">GitHub username</label>
+        <input class="adm-input" id="gh-user" type="text" placeholder="your-github-username" style="margin-bottom:8px;" />
+        <label class="adm-label">Repository name</label>
+        <input class="adm-input" id="gh-repo" type="text" placeholder="testxtrialx" style="margin-bottom:8px;" />
+        <button class="adm-btn" onclick="saveToken()">Save settings</button>
+        <span class="adm-msg" id="token-msg"></span>
+      </div>
+      <label class="adm-label">Headline</label>
+      <input class="adm-input" id="adm-headline" type="text" placeholder="Your article title..." />
+      <label class="adm-label">Subtitle / description</label>
+      <input class="adm-input" id="adm-dek" type="text" placeholder="A short description..." />
+      <label class="adm-label">Category</label>
+      <select class="adm-select" id="adm-cat">
+        <option value="culture">Culture</option>
+        <option value="politics">Politics</option>
+        <option value="opinion">Opinion</option>
+        <option value="sports">Sports</option>
+        <option value="literature">Literature</option>
+        <option value="music">Music</option>
+        <option value="debate">Debate</option>
+      </select>
+      <label class="adm-label">Author name</label>
+      <input class="adm-input" id="adm-author" type="text" placeholder="Your name..." />
+      <label class="adm-label">Body text</label>
+      <textarea class="adm-textarea" id="adm-body" placeholder="Write your article here. Press Enter twice for a new paragraph..."></textarea>
+      <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-top:4px;">
+        <button class="adm-btn" id="publish-btn" onclick="publishArticle()">Publish article</button>
+        <button class="adm-btn secondary" onclick="clearForm()">Clear</button>
+      </div>
+      <div class="adm-msg" id="publish-msg"></div>
+      <div class="adm-section">
+        <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:#888; margin-bottom:1rem;">Published articles</div>
+        <div id="adm-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tx-footer">
+    <div class="tx-footer-logo">TEST<span>X</span></div>
+    <div class="tx-footer-txt">Independent · Est. 2026 · All rights reserved</div>
+    <span class="tx-footer-admin" onclick="showAdmin()">admin</span>
+  </div>
+
+</div>
