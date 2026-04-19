@@ -1,12 +1,110 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TEST X — Editor</title>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <title>TEST X</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; color: #111; background: #fff; }
+    .tx-wrap { max-width: 860px; margin: 0 auto; padding: 0 1.5rem 3rem; }
+    .tx-topbar { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 0.5px solid #ddd; font-family: 'Space Mono', monospace; font-size: 10px; color: #888; letter-spacing: 0.04em; }
+    .tx-topbar-right { display: flex; gap: 14px; }
+    .tx-header { text-align: center; padding: 2rem 0 1rem; border-bottom: 2px solid #111; }
+    .tx-logo { font-family: 'DM Serif Display', serif; font-size: 68px; font-weight: 400; letter-spacing: -2px; line-height: 1; color: #111; cursor: pointer; }
+    .tx-logo span { color: #D4FF00; -webkit-text-stroke: 1px #000; }
+    .tx-tagline { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #888; margin-top: 6px; }
+    .tx-nav { display: flex; justify-content: center; flex-wrap: wrap; padding: 0.6rem 0; border-bottom: 0.5px solid #ddd; }
+    .tx-nav a { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; color: #111; padding: 4px 12px; transition: background 0.15s; cursor: pointer; }
+    .tx-nav a:hover { background: #D4FF00; color: #000; }
+    .tx-nav a.active { background: #000; color: #D4FF00; }
+    .tx-ticker { background: #000; color: #D4FF00; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.08em; padding: 6px 0; margin-top: 1.5rem; overflow: hidden; white-space: nowrap; }
+    .tx-ticker-inner { display: inline-block; animation: ticker 22s linear infinite; }
+    @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+    .tx-dot { margin: 0 18px; opacity: 0.5; }
+    .tx-tag { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: #fff; background: #000; padding: 2px 7px; display: inline-block; margin-bottom: 8px; }
+    .tx-tag.culture    { background: #D4FF00; color: #000; }
+    .tx-tag.music      { background: #FF3CAC; color: #fff; }
+    .tx-tag.opinion    { background: #111;    color: #fff; }
+    .tx-tag.sports     { background: #00C9A7; color: #000; }
+    .tx-tag.debate     { background: #FF6B35; color: #fff; }
+    .tx-tag.literature { background: #7B61FF; color: #fff; }
+    .tx-tag.politics   { background: #222;    color: #fff; }
+    .tx-headline-xl { font-family: 'DM Serif Display', serif; font-size: 32px; line-height: 1.15; font-weight: 400; color: #111; margin-bottom: 10px; cursor: pointer; }
+    .tx-headline-xl:hover { text-decoration: underline; text-decoration-color: #D4FF00; }
+    .tx-headline-md { font-family: 'DM Serif Display', serif; font-size: 19px; line-height: 1.2; font-weight: 400; color: #111; margin-bottom: 8px; cursor: pointer; }
+    .tx-headline-md:hover { text-decoration: underline; text-decoration-color: #D4FF00; }
+    .tx-headline-sm { font-family: 'DM Serif Display', serif; font-size: 15px; line-height: 1.25; font-weight: 400; color: #111; margin-bottom: 6px; cursor: pointer; }
+    .tx-headline-sm:hover { text-decoration: underline; text-decoration-color: #D4FF00; }
+    .tx-dek { font-size: 13px; line-height: 1.6; color: #666; margin-bottom: 10px; }
+    .tx-byline { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.08em; color: #888; margin-top: 8px; }
+    .tx-img-block { width: 100%; height: 200px; background: #f0f0f0; margin-bottom: 14px; display: flex; align-items: center; justify-content: center; }
+    .tx-img-sm { width: 100%; height: 100px; background: #f5f5f5; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; }
+    .tx-img-label { font-family: 'Space Mono', monospace; font-size: 9px; color: #bbb; text-transform: uppercase; letter-spacing: 0.1em; }
+    .tx-footer { margin-top: 2rem; padding-top: 1rem; border-top: 2px solid #111; display: flex; justify-content: space-between; align-items: center; }
+    .tx-footer-logo { font-family: 'DM Serif Display', serif; font-size: 18px; }
+    .tx-footer-logo span { color: #D4FF00; -webkit-text-stroke: 1px #000; }
+    .tx-footer-txt { font-family: 'Space Mono', monospace; font-size: 9px; color: #888; letter-spacing: 0.08em; }
+    .tx-footer-admin { font-family: 'Space Mono', monospace; font-size: 9px; color: #ccc; cursor: pointer; letter-spacing: 0.06em; }
+    .tx-footer-admin:hover { color: #888; }
+    .tx-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; margin-top: 2rem; border: 0.5px solid #ddd; }
+    .tx-featured { grid-column: 1 / 3; grid-row: 1; padding: 1.5rem; border-right: 0.5px solid #ddd; border-bottom: 0.5px solid #ddd; }
+    .tx-sidebar { grid-column: 3; grid-row: 1 / 3; display: flex; flex-direction: column; }
+    .tx-sidebar-item { padding: 1.2rem; border-bottom: 0.5px solid #ddd; flex: 1; }
+    .tx-sidebar-item:last-child { border-bottom: none; }
+    .tx-bottom-row { grid-column: 1 / 3; grid-row: 2; display: grid; grid-template-columns: 1fr 1fr; }
+    .tx-card { padding: 1.2rem 1.5rem; border-right: 0.5px solid #ddd; }
+    .tx-card:last-child { border-right: none; }
+    #page-article { display: none; }
+    #page-category { display: none; }
+    #page-admin { display: none; }
+    .art-back { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; color: #888; margin: 1.5rem 0 1rem; display: inline-block; }
+    .art-back:hover { color: #111; }
+    .art-header { border-bottom: 2px solid #111; padding-bottom: 1.5rem; margin-bottom: 2rem; }
+    .art-title { font-family: 'DM Serif Display', serif; font-size: 42px; line-height: 1.1; font-weight: 400; margin: 12px 0; }
+    .art-dek { font-size: 16px; line-height: 1.6; color: #555; margin-bottom: 12px; }
+    .art-byline-line { font-family: 'Space Mono', monospace; font-size: 10px; color: #888; letter-spacing: 0.06em; }
+    .art-body { font-size: 17px; line-height: 1.85; color: #222; max-width: 660px; }
+    .art-body p { margin-bottom: 1.4em; }
+    .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 1.5rem; border: 0.5px solid #ddd; }
+    .cat-card { padding: 1.5rem; border-right: 0.5px solid #ddd; border-bottom: 0.5px solid #ddd; cursor: pointer; }
+    .cat-card:nth-child(even) { border-right: none; }
+    .cat-card:hover { background: #fafafa; }
+    .cat-empty { font-family: 'Space Mono', monospace; font-size: 11px; color: #aaa; padding: 2rem; letter-spacing: 0.08em; }
+    .adm-wrap { max-width: 640px; margin-top: 1.5rem; }
+    .adm-title { font-family: 'DM Serif Display', serif; font-size: 28px; margin-bottom: 0.4rem; }
+    .adm-sub { font-family: 'Space Mono', monospace; font-size: 10px; color: #888; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem; }
+    .adm-label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #888; margin-bottom: 4px; display: block; }
+    .adm-input, .adm-select, .adm-textarea { width: 100%; padding: 10px 12px; border: 0.5px solid #ccc; font-family: 'Inter', sans-serif; font-size: 14px; color: #111; background: #fff; outline: none; border-radius: 0; transition: border-color 0.15s; margin-bottom: 14px; }
+    .adm-input:focus, .adm-select:focus, .adm-textarea:focus { border-color: #111; }
+    .adm-textarea { min-height: 280px; resize: vertical; line-height: 1.7; }
+    .adm-btn { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; background: #111; color: #D4FF00; border: none; padding: 12px 24px; cursor: pointer; transition: background 0.15s; }
+    .adm-btn:hover { background: #333; }
+    .adm-btn.secondary { background: #fff; color: #111; border: 0.5px solid #ccc; margin-left: 8px; }
+    .adm-btn.secondary:hover { background: #f5f5f5; }
+    .adm-btn:disabled { background: #ccc; color: #fff; cursor: not-allowed; }
+    .adm-msg { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.08em; margin-top: 10px; display: none; }
+    .adm-msg.success { color: #00C9A7; }
+    .adm-msg.error { color: #FF3CAC; }
+    .adm-section { margin-top: 2rem; padding-top: 1.5rem; border-top: 0.5px solid #ddd; }
+    .adm-art-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 0.5px solid #eee; }
+    .adm-art-ttl { font-size: 14px; font-weight: 500; color: #111; }
+    .adm-art-meta { font-family: 'Space Mono', monospace; font-size: 9px; color: #aaa; margin-top: 2px; }
+    .adm-del { font-family: 'Space Mono', monospace; font-size: 9px; color: #ccc; cursor: pointer; letter-spacing: 0.06em; text-transform: uppercase; border: none; background: none; }
+    .adm-del:hover { color: #FF3CAC; }
+    .adm-token-box { background: #f9f9f9; border: 0.5px solid #ddd; padding: 1.2rem; margin-bottom: 1.5rem; }
+    .adm-token-note { font-family: 'Space Mono', monospace; font-size: 10px; color: #888; line-height: 1.7; letter-spacing: 0.04em; margin-bottom: 10px; }
+    @media (max-width: 640px) {
+      .tx-grid { grid-template-columns: 1fr; }
+      .tx-featured { grid-column: 1; border-right: none; }
+      .tx-sidebar { grid-column: 1; grid-row: auto; }
+      .tx-bottom-row { grid-column: 1; grid-template-columns: 1fr; }
+      .tx-card { border-right: none; border-bottom: 0.5px solid #ddd; }
+      .tx-logo { font-size: 44px; }
+      .cat-grid { grid-template-columns: 1fr; }
+      .cat-card { border-right: none; }
+      .art-title { font-size: 28px; }
+    }
+  </style>
 </head>
-<body>
-  <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
-</body>
-</html>
