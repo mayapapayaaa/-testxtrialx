@@ -55,7 +55,7 @@
     .tx-footer-logo { font-family: 'DM Serif Display', serif; font-size: 18px; }
     .tx-footer-logo span { color: #D4FF00; -webkit-text-stroke: 1px #000; }
     .tx-footer-txt { font-family: 'Space Mono', monospace; font-size: 9px; color: #888; letter-spacing: 0.08em; }
-    .tx-footer-admin { font-family: 'Space Mono', monospace; font-size: 9px; color: #ccc; cursor: pointer; letter-spacing: 0.06em; text-decoration: none; }
+    .tx-footer-admin { font-family: 'Space Mono', monospace; font-size: 9px; color: #ccc; cursor: pointer; letter-spacing: 0.06em; }
     .tx-footer-admin:hover { color: #888; }
 
     .tx-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; margin-top: 2rem; border: 0.5px solid #ddd; }
@@ -68,6 +68,9 @@
     .tx-card:last-child { border-right: none; }
 
     #page-article { display: none; }
+    #page-category { display: none; }
+    #page-admin { display: none; }
+
     .art-back { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; color: #888; margin: 1.5rem 0 1rem; display: inline-block; }
     .art-back:hover { color: #111; }
     .art-header { border-bottom: 2px solid #111; padding-bottom: 1.5rem; margin-bottom: 2rem; }
@@ -77,14 +80,35 @@
     .art-body { font-size: 17px; line-height: 1.85; color: #222; max-width: 660px; }
     .art-body p { margin-bottom: 1.4em; }
 
-    #page-category { display: none; }
     .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 1.5rem; border: 0.5px solid #ddd; }
     .cat-card { padding: 1.5rem; border-right: 0.5px solid #ddd; border-bottom: 0.5px solid #ddd; cursor: pointer; }
     .cat-card:nth-child(even) { border-right: none; }
     .cat-card:hover { background: #fafafa; }
     .cat-empty { font-family: 'Space Mono', monospace; font-size: 11px; color: #aaa; padding: 2rem; letter-spacing: 0.08em; }
 
-    .loading { font-family: 'Space Mono', monospace; font-size: 11px; color: #aaa; padding: 3rem 0; text-align: center; letter-spacing: 0.1em; }
+    .adm-wrap { max-width: 640px; margin-top: 1.5rem; }
+    .adm-title { font-family: 'DM Serif Display', serif; font-size: 28px; margin-bottom: 0.4rem; }
+    .adm-sub { font-family: 'Space Mono', monospace; font-size: 10px; color: #888; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem; }
+    .adm-label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #888; margin-bottom: 4px; display: block; }
+    .adm-input, .adm-select, .adm-textarea { width: 100%; padding: 10px 12px; border: 0.5px solid #ccc; font-family: 'Inter', sans-serif; font-size: 14px; color: #111; background: #fff; outline: none; border-radius: 0; transition: border-color 0.15s; margin-bottom: 14px; }
+    .adm-input:focus, .adm-select:focus, .adm-textarea:focus { border-color: #111; }
+    .adm-textarea { min-height: 280px; resize: vertical; line-height: 1.7; }
+    .adm-btn { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; background: #111; color: #D4FF00; border: none; padding: 12px 24px; cursor: pointer; transition: background 0.15s; }
+    .adm-btn:hover { background: #333; }
+    .adm-btn.secondary { background: #fff; color: #111; border: 0.5px solid #ccc; margin-left: 8px; }
+    .adm-btn.secondary:hover { background: #f5f5f5; }
+    .adm-btn:disabled { background: #ccc; color: #fff; cursor: not-allowed; }
+    .adm-msg { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.08em; margin-top: 10px; display: none; }
+    .adm-msg.success { color: #00C9A7; }
+    .adm-msg.error { color: #FF3CAC; }
+    .adm-section { margin-top: 2rem; padding-top: 1.5rem; border-top: 0.5px solid #ddd; }
+    .adm-art-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 0.5px solid #eee; }
+    .adm-art-ttl { font-size: 14px; font-weight: 500; color: #111; }
+    .adm-art-meta { font-family: 'Space Mono', monospace; font-size: 9px; color: #aaa; margin-top: 2px; }
+    .adm-del { font-family: 'Space Mono', monospace; font-size: 9px; color: #ccc; cursor: pointer; letter-spacing: 0.06em; text-transform: uppercase; border: none; background: none; }
+    .adm-del:hover { color: #FF3CAC; }
+    .adm-token-box { background: #f9f9f9; border: 0.5px solid #ddd; padding: 1.2rem; margin-bottom: 1.5rem; }
+    .adm-token-note { font-family: 'Space Mono', monospace; font-size: 10px; color: #888; line-height: 1.7; letter-spacing: 0.04em; margin-bottom: 10px; }
 
     @media (max-width: 640px) {
       .tx-grid { grid-template-columns: 1fr; }
@@ -154,88 +178,184 @@
     <div id="art-body" class="art-body"></div>
   </div>
 
+  <!-- ADMIN -->
+  <div id="page-admin">
+    <span class="art-back" onclick="showHome()">← Back to site</span>
+    <div class="adm-wrap">
+      <div class="adm-title">Editor</div>
+      <div class="adm-sub">Write &amp; publish articles to the live site</div>
+
+      <div class="adm-token-box" id="token-box">
+        <div class="adm-token-note">To publish articles publicly, paste your GitHub Personal Access Token below. This is stored only in your browser and never shared. You only need to do this once.</div>
+        <label class="adm-label">GitHub token</label>
+        <input class="adm-input" id="gh-token" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" style="margin-bottom:8px;" />
+        <label class="adm-label">GitHub username</label>
+        <input class="adm-input" id="gh-user" type="text" placeholder="your-github-username" style="margin-bottom:8px;" />
+        <label class="adm-label">Repository name</label>
+        <input class="adm-input" id="gh-repo" type="text" placeholder="testxtrialx" style="margin-bottom:8px;" />
+        <button class="adm-btn" onclick="saveToken()">Save settings</button>
+        <span class="adm-msg" id="token-msg"></span>
+      </div>
+
+      <label class="adm-label">Headline</label>
+      <input class="adm-input" id="adm-headline" type="text" placeholder="Your article title..." />
+      <label class="adm-label">Subtitle / description</label>
+      <input class="adm-input" id="adm-dek" type="text" placeholder="A short description..." />
+      <label class="adm-label">Category</label>
+      <select class="adm-select" id="adm-cat">
+        <option value="culture">Culture</option>
+        <option value="politics">Politics</option>
+        <option value="opinion">Opinion</option>
+        <option value="sports">Sports</option>
+        <option value="literature">Literature</option>
+        <option value="music">Music</option>
+        <option value="debate">Debate</option>
+      </select>
+      <label class="adm-label">Author name</label>
+      <input class="adm-input" id="adm-author" type="text" placeholder="Your name..." />
+      <label class="adm-label">Body text</label>
+      <textarea class="adm-textarea" id="adm-body" placeholder="Write your article here. Press Enter twice for a new paragraph..."></textarea>
+      <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-top:4px;">
+        <button class="adm-btn" id="publish-btn" onclick="publishArticle()">Publish article</button>
+        <button class="adm-btn secondary" onclick="clearForm()">Clear</button>
+      </div>
+      <div class="adm-msg" id="publish-msg"></div>
+
+      <div class="adm-section">
+        <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:#888; margin-bottom:1rem;">Published articles</div>
+        <div id="adm-list"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="tx-footer">
     <div class="tx-footer-logo">TEST<span>X</span></div>
     <div class="tx-footer-txt">Independent · Est. 2026 · All rights reserved</div>
-    <a href="/admin" class="tx-footer-admin">admin</a>
+    <span class="tx-footer-admin" onclick="showAdmin()">admin</span>
   </div>
 
 </div>
 <script>
-  // ── Seed articles (shown until you publish your own) ──────────────────────
   const SEED = [
     { id:'s1', title:'The internet never forgot — it just stopped caring', dek:'A decade after the first meme went viral, we explore what it means to live online in an era of permanent, numbingly fast forgetting.', category:'culture', author:'Staff Writer', date:'19 Apr 2026', body:'We used to say the internet never forgets. It was meant as a warning — post something embarrassing and it lives forever, searchable, screenshot-able, eternal. But spend a week online now and you will notice something stranger has happened. The internet remembers everything and cares about almost none of it.\n\nThe feed moves so fast that a story which dominates a Tuesday morning is completely gone by Tuesday afternoon. Not deleted. Not retracted. Simply buried under the next wave of content, the next outrage, the next moment of collective attention.\n\nThis is the paradox of digital memory in 2026. The archive is infinite. The attention span is not. And so we live in a world of permanent record and permanent forgetting at the same time.\n\nWhat does that do to us? To the stories we tell, the mistakes we make, the people we hold accountable? These are not rhetorical questions. They are the questions that define what kind of culture we are building.' },
-    { id:'s2', title:'Democracy is not in crisis — it just looks different now', dek:'On participation, disillusionment, and why cynicism is the easy answer.', category:'opinion', author:'Staff Writer', date:'18 Apr 2026', body:'Every few years someone publishes a book declaring the death of democracy. It is a reliable genre. The covers are dark, the tone is urgent, the sales are strong.\n\nAnd yet here we are. Elections still happen. Governments still change. Courts still occasionally surprise us. The infrastructure of democracy is battered, no question — but the reports of its death have been greatly exaggerated.\n\nWhat has changed is participation and trust. People vote less, not everywhere, but in enough places to worry about. They trust institutions less. They believe their vote matters less. And that erosion of belief is its own kind of crisis, distinct from the formal machinery breaking down.\n\nThe challenge is not to save democracy in the abstract. It is to make it feel real again to people for whom it has become an abstraction.' },
-    { id:'s3', title:'Norwegian underground: the sounds nobody is listening to yet', dek:'A guide to the artists shaping the next wave of Nordic music.', category:'music', author:'Staff Writer', date:'17 Apr 2026', body:'There is a corner of Oslo that does not care what the rest of the world thinks. Small venues, small runs, records pressed in editions of three hundred. Music made not for playlists but for rooms.\n\nNorwegian underground music has always operated this way. The country is small enough that artists cannot survive on local attention alone, but proud enough not to chase external approval too eagerly. The result is a scene that moves on its own logic.\n\nRight now that logic is producing something genuinely interesting. Artists blending folk structures with electronic production, or stripping everything back to voice and very little else. It is not easy listening. It is not meant to be.' },
-    { id:'s4', title:'What football taught me about failure', dek:'A personal essay on the pitch, the crowd, and the specific sadness of a near-miss.', category:'sports', author:'Staff Writer', date:'14 Apr 2026', body:'The first thing football teaches you is that you will lose. Not eventually. Regularly. Even the best teams in the world lose a third of their games. Even the best players in the world miss. The sport is structured around failure in a way that almost nothing else in life is.\n\nI grew up playing and then watching, and at some point the two activities merged into the same education. How to want something and not get it. How to try again. How to sit in the silence after a near-miss and resist the urge to explain it away.\n\nThe near-miss is a special category of pain. A loss is clean. You process it and move on. But the near-miss lingers because it contains the ghost of what could have happened.' },
-    { id:'s5', title:'The quiet election nobody talked about', dek:'Local politics shapes daily life more than any national headline — so why do we ignore it?', category:'politics', author:'Staff Writer', date:'13 Apr 2026', body:'Last autumn, a local council in a mid-sized European city voted on a zoning decision that will determine where five thousand families live for the next thirty years. The meeting lasted four hours. Twelve people attended.\n\nThe same week, a national politician said something mildly provocative on television. It dominated the news cycle for three days.\n\nThis is not a new observation. Journalists and political scientists have been making it for decades. Local politics is where decisions are made. National politics is where attention goes. The gap between the two is where a great deal of civic life quietly falls apart.' },
-    { id:'s6', title:'The short story is the most honest form of fiction', dek:'On compression, precision, and why the short form demands more than the novel.', category:'literature', author:'Staff Writer', date:'15 Apr 2026', body:'A novel can afford to be wrong for a hundred pages. It can meander, contradict itself, lose the thread and find it again. The reader will forgive this because the form allows it. There is time.\n\nThe short story has no such luxury. Every sentence is doing multiple jobs. Every word that does not earn its place weakens the whole. It is the most unforgiving form in fiction, which is probably why it is also, at its best, the most precise.\n\nPrecision is not the same as brevity. Some of the most precise writers are expansive. What precision means in fiction is the quality of attention — the sense that nothing is there by accident, that every detail has been chosen for a reason even if that reason is not immediately visible.' }
+    { id:'s2', title:'Democracy is not in crisis — it just looks different now', dek:'On participation, disillusionment, and why cynicism is the easy answer.', category:'opinion', author:'Staff Writer', date:'18 Apr 2026', body:'Every few years someone publishes a book declaring the death of democracy. It is a reliable genre. The covers are dark, the tone is urgent, the sales are strong.\n\nAnd yet here we are. Elections still happen. Governments still change. Courts still occasionally surprise us. The infrastructure of democracy is battered, no question — but the reports of its death have been greatly exaggerated.\n\nWhat has changed is participation and trust. People vote less, not everywhere, but in enough places to worry about. They trust institutions less. They believe their vote matters less. And that erosion of belief is its own kind of crisis, distinct from the formal machinery breaking down.' },
+    { id:'s3', title:'Norwegian underground: the sounds nobody is listening to yet', dek:'A guide to the artists shaping the next wave of Nordic music.', category:'music', author:'Staff Writer', date:'17 Apr 2026', body:'There is a corner of Oslo that does not care what the rest of the world thinks. Small venues, small runs, records pressed in editions of three hundred. Music made not for playlists but for rooms.\n\nNorwegian underground music has always operated this way. The country is small enough that artists cannot survive on local attention alone, but proud enough not to chase external approval too eagerly. The result is a scene that moves on its own logic.' },
+    { id:'s4', title:'What football taught me about failure', dek:'A personal essay on the pitch, the crowd, and the specific sadness of a near-miss.', category:'sports', author:'Staff Writer', date:'14 Apr 2026', body:'The first thing football teaches you is that you will lose. Not eventually. Regularly. Even the best teams in the world lose a third of their games. Even the best players in the world miss. The sport is structured around failure in a way that almost nothing else in life is.\n\nI grew up playing and then watching, and at some point the two activities merged into the same education. How to want something and not get it. How to try again. How to sit in the silence after a near-miss and resist the urge to explain it away.' },
+    { id:'s5', title:'The quiet election nobody talked about', dek:'Local politics shapes daily life more than any national headline — so why do we ignore it?', category:'politics', author:'Staff Writer', date:'13 Apr 2026', body:'Last autumn, a local council in a mid-sized European city voted on a zoning decision that will determine where five thousand families live for the next thirty years. The meeting lasted four hours. Twelve people attended.\n\nThe same week, a national politician said something mildly provocative on television. It dominated the news cycle for three days.\n\nThis is not a new observation. Journalists and political scientists have been making it for decades. Local politics is where decisions are made. National politics is where attention goes.' },
+    { id:'s6', title:'The short story is the most honest form of fiction', dek:'On compression, precision, and why the short form demands more than the novel.', category:'literature', author:'Staff Writer', date:'15 Apr 2026', body:'A novel can afford to be wrong for a hundred pages. It can meander, contradict itself, lose the thread and find it again. The reader will forgive this because the form allows it. There is time.\n\nThe short story has no such luxury. Every sentence is doing multiple jobs. Every word that does not earn its place weakens the whole. It is the most unforgiving form in fiction, which is probably why it is also, at its best, the most precise.' }
   ];
 
-  let ARTICLES = [];
+  let ARTICLES = [...SEED];
   let lastPage = 'home';
   let lastCat  = 'all';
 
-  // ── Parse markdown frontmatter from CMS files ─────────────────────────────
-  function parseFrontmatter(text) {
-    const match = text.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
-    if (!match) return null;
-    const meta = {};
-    match[1].split('\n').forEach(line => {
-      const i = line.indexOf(':');
-      if (i > -1) {
-        const key = line.slice(0, i).trim();
-        const val = line.slice(i + 1).trim().replace(/^["']|["']$/g, '');
-        meta[key] = val;
-      }
-    });
-    meta.body = match[2].trim();
-    return meta;
+  // ── GitHub helpers ────────────────────────────────────────────────────────
+  function getSettings() {
+    return {
+      token: localStorage.getItem('tx_token') || '',
+      user:  localStorage.getItem('tx_user')  || '',
+      repo:  localStorage.getItem('tx_repo')  || ''
+    };
   }
 
-  // ── Load articles from _articles/ folder (written by CMS) ────────────────
-  async function loadArticles() {
+  function saveToken() {
+    const token = document.getElementById('gh-token').value.trim();
+    const user  = document.getElementById('gh-user').value.trim();
+    const repo  = document.getElementById('gh-repo').value.trim();
+    if (!token || !user || !repo) { showMsg('token-msg', 'Please fill in all three fields.', 'error'); return; }
+    localStorage.setItem('tx_token', token);
+    localStorage.setItem('tx_user', user);
+    localStorage.setItem('tx_repo', repo);
+    showMsg('token-msg', '✓ Settings saved!', 'success');
+    document.getElementById('token-box').style.opacity = '0.5';
+  }
+
+  async function fetchArticlesFromGithub() {
+    const { token, user, repo } = getSettings();
+    if (!token || !user || !repo) return null;
     try {
-      const res = await fetch('/_articles/index.json');
-      if (!res.ok) throw new Error();
-      const files = await res.json();
-      const parsed = await Promise.all(files.map(async f => {
-        try {
-          const r = await fetch(`/_articles/${f}`);
-          const text = await r.text();
-          const data = parseFrontmatter(text);
-          if (!data) return null;
-          return { id: f.replace('.md',''), title: data.title, dek: data.dek||'', category: data.category||'culture', author: data.author||'Staff Writer', date: data.date||'', body: data.body };
-        } catch(e) { return null; }
-      }));
-      const valid = parsed.filter(Boolean);
-      ARTICLES = valid.length > 0 ? valid : SEED;
-    } catch(e) {
-      ARTICLES = SEED;
-    }
-    showHome();
+      const res = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/articles.json`, {
+        headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      const decoded = JSON.parse(atob(data.content.replace(/\n/g,'')));
+      return { articles: decoded, sha: data.sha };
+    } catch(e) { return null; }
   }
 
-  function readTime(body) { return Math.max(1, Math.round((body||'').split(' ').length / 200)); }
+  async function saveArticlesToGithub(articles) {
+    const { token, user, repo } = getSettings();
+    const btn = document.getElementById('publish-btn');
+    btn.disabled = true;
+    btn.textContent = 'Publishing...';
+    try {
+      let sha = null;
+      const existing = await fetchArticlesFromGithub();
+      if (existing) sha = existing.sha;
+      const content = btoa(unescape(encodeURIComponent(JSON.stringify(articles, null, 2))));
+      const body = { message: 'Update articles', content };
+      if (sha) body.sha = sha;
+      const res = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/articles.json`, {
+        method: 'PUT',
+        headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) { const err = await res.json(); throw new Error(err.message); }
+      showMsg('publish-msg', '✓ Published! Site will update in about 30 seconds.', 'success');
+      ARTICLES = [...articles, ...SEED];
+      renderAdminList(articles);
+      return true;
+    } catch(e) {
+      showMsg('publish-msg', `Error: ${e.message}. Check your token and repo name.`, 'error');
+      return false;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Publish article';
+    }
+  }
 
+  function showMsg(id, text, type) {
+    const el = document.getElementById(id);
+    el.textContent = text;
+    el.className = `adm-msg ${type}`;
+    el.style.display = 'block';
+    if (type === 'success') setTimeout(() => el.style.display = 'none', 4000);
+  }
+
+  // ── Load articles ─────────────────────────────────────────────────────────
+  async function loadArticles() {
+    const result = await fetchArticlesFromGithub();
+    if (result && result.articles.length > 0) {
+      ARTICLES = [...result.articles, ...SEED];
+    } else {
+      ARTICLES = [...SEED];
+    }
+    renderHome();
+  }
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  function readTime(body) { return Math.max(1, Math.round((body||'').split(' ').length / 200)); }
   function setActiveNav(cat) {
     document.querySelectorAll('.tx-nav a').forEach(a => a.classList.toggle('active', a.dataset.cat === cat));
   }
-
   function hideAll() {
-    ['page-home','page-category','page-article'].forEach(id => document.getElementById(id).style.display = 'none');
+    ['page-home','page-category','page-article','page-admin'].forEach(id => document.getElementById(id).style.display = 'none');
   }
 
+  // ── Pages ─────────────────────────────────────────────────────────────────
   function showHome() {
     hideAll();
     lastPage = 'home'; lastCat = 'all';
     setActiveNav('all');
+    renderHome();
+    document.getElementById('page-home').style.display = 'block';
+    window.scrollTo(0,0);
+  }
+
+  function renderHome() {
     const arts = ARTICLES;
-    if (arts.length === 0) {
-      document.getElementById('home-grid').innerHTML = `<p class="loading">No articles yet.</p>`;
-      document.getElementById('page-home').style.display = 'block';
-      return;
-    }
+    if (!arts.length) { document.getElementById('home-grid').innerHTML = `<p style="padding:3rem 0; font-family:'Space Mono',monospace; font-size:11px; color:#aaa;">No articles yet.</p>`; return; }
     const f = arts[0], side = arts.slice(1,5), bot = arts.slice(5,7);
     document.getElementById('home-grid').innerHTML = `
       <div class="tx-grid">
@@ -243,14 +363,14 @@
           <div class="tx-img-block"><span class="tx-img-label">[ Featured image ]</span></div>
           <span class="tx-tag ${f.category}">${f.category}</span>
           <div class="tx-headline-xl" onclick="showArticle('${f.id}')">${f.title}</div>
-          <p class="tx-dek">${f.dek}</p>
-          <div class="tx-byline">By ${f.author} &nbsp;·&nbsp; ${f.date} &nbsp;·&nbsp; ${readTime(f.body)} min read</div>
+          <p class="tx-dek">${f.dek||''}</p>
+          <div class="tx-byline">By ${f.author||'Staff Writer'} &nbsp;·&nbsp; ${f.date||''} &nbsp;·&nbsp; ${readTime(f.body)} min read</div>
         </div>
         <div class="tx-sidebar">
           ${side.map(a=>`<div class="tx-sidebar-item">
             <span class="tx-tag ${a.category}">${a.category}</span>
             <div class="tx-headline-sm" onclick="showArticle('${a.id}')">${a.title}</div>
-            <div class="tx-byline">${a.date} · ${readTime(a.body)} min</div>
+            <div class="tx-byline">${a.date||''} · ${readTime(a.body)} min</div>
           </div>`).join('')}
         </div>
         <div class="tx-bottom-row">
@@ -258,13 +378,11 @@
             <div class="tx-img-sm"><span class="tx-img-label">[ Image ]</span></div>
             <span class="tx-tag ${a.category}">${a.category}</span>
             <div class="tx-headline-md" onclick="showArticle('${a.id}')">${a.title}</div>
-            <p class="tx-dek">${a.dek}</p>
-            <div class="tx-byline">${a.date} · ${readTime(a.body)} min</div>
+            <p class="tx-dek">${a.dek||''}</p>
+            <div class="tx-byline">${a.date||''} · ${readTime(a.body)} min</div>
           </div>`).join('')}
         </div>
       </div>`;
-    document.getElementById('page-home').style.display = 'block';
-    window.scrollTo(0,0);
   }
 
   function showCategory(cat) {
@@ -279,8 +397,8 @@
       : arts.map(a=>`<div class="cat-card" onclick="showArticle('${a.id}')">
           <span class="tx-tag ${a.category}">${a.category}</span>
           <div class="tx-headline-md" style="margin-top:4px;">${a.title}</div>
-          <p class="tx-dek" style="margin-top:8px;">${a.dek}</p>
-          <div class="tx-byline">${a.date} · ${readTime(a.body)} min read</div>
+          <p class="tx-dek" style="margin-top:8px;">${a.dek||''}</p>
+          <div class="tx-byline">${a.date||''} · ${readTime(a.body)} min read</div>
         </div>`).join('');
     document.getElementById('page-category').style.display = 'block';
     window.scrollTo(0,0);
@@ -292,8 +410,8 @@
     hideAll();
     document.getElementById('art-tag').innerHTML = `<span class="tx-tag ${art.category}">${art.category}</span>`;
     document.getElementById('art-title').textContent = art.title;
-    document.getElementById('art-dek').textContent = art.dek;
-    document.getElementById('art-byline').textContent = `By ${art.author} · ${art.date} · ${readTime(art.body)} min read`;
+    document.getElementById('art-dek').textContent = art.dek||'';
+    document.getElementById('art-byline').textContent = `By ${art.author||'Staff Writer'} · ${art.date||''} · ${readTime(art.body)} min read`;
     document.getElementById('art-body').innerHTML = art.body.split(/\n\n+/).map(p=>`<p>${p.trim()}</p>`).join('');
     document.getElementById('page-article').style.display = 'block';
     window.scrollTo(0,0);
@@ -304,6 +422,66 @@
     else showHome();
   }
 
+  function showAdmin() {
+    hideAll();
+    setActiveNav('');
+    const s = getSettings();
+    if (s.token) {
+      document.getElementById('gh-token').value = s.token;
+      document.getElementById('gh-user').value  = s.user;
+      document.getElementById('gh-repo').value  = s.repo;
+      document.getElementById('token-box').style.opacity = '0.5';
+    }
+    fetchArticlesFromGithub().then(result => {
+      renderAdminList(result ? result.articles : []);
+    });
+    document.getElementById('page-admin').style.display = 'block';
+    window.scrollTo(0,0);
+  }
+
+  async function publishArticle() {
+    const title  = document.getElementById('adm-headline').value.trim();
+    const dek    = document.getElementById('adm-dek').value.trim();
+    const cat    = document.getElementById('adm-cat').value;
+    const author = document.getElementById('adm-author').value.trim() || 'Staff Writer';
+    const body   = document.getElementById('adm-body').value.trim();
+    if (!title || !body) { showMsg('publish-msg', 'Please add a headline and body text.', 'error'); return; }
+    const { token } = getSettings();
+    if (!token) { showMsg('publish-msg', 'Please save your GitHub settings first.', 'error'); return; }
+    const existing = await fetchArticlesFromGithub();
+    const current = existing ? existing.articles : [];
+    const newArt = {
+      id: 'c' + Date.now(), title, dek, category: cat, author, body,
+      date: new Date().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })
+    };
+    await saveArticlesToGithub([newArt, ...current]);
+    clearForm();
+  }
+
+  async function deleteArticle(id) {
+    if (!confirm('Delete this article?')) return;
+    const existing = await fetchArticlesFromGithub();
+    if (!existing) return;
+    await saveArticlesToGithub(existing.articles.filter(a => a.id !== id));
+  }
+
+  function renderAdminList(articles) {
+    document.getElementById('adm-list').innerHTML = !articles || articles.length === 0
+      ? `<p style="font-family:'Space Mono',monospace;font-size:10px;color:#ccc;letter-spacing:0.08em;">No articles published yet.</p>`
+      : articles.map(a=>`<div class="adm-art-row">
+          <div>
+            <div class="adm-art-ttl">${a.title}</div>
+            <div class="adm-art-meta">${a.category} · ${a.date}</div>
+          </div>
+          <button class="adm-del" onclick="deleteArticle('${a.id}')">Delete</button>
+        </div>`).join('');
+  }
+
+  function clearForm() {
+    ['adm-headline','adm-dek','adm-author','adm-body'].forEach(id => document.getElementById(id).value='');
+    document.getElementById('adm-cat').value = 'culture';
+  }
+
   const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   const now = new Date();
@@ -311,6 +489,5 @@
 
   loadArticles();
 </script>
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </body>
 </html>
