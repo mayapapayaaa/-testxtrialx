@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TEST X</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; color: #111; background: #fff; }
+    .tx-wrap { max-width: 860px; margin: 0 auto; padding: 0 1.5rem 3rem; }
+
+    .tx-topbar { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 0.5px solid #ddd; font-family: 'Space Mono', monospace; font-size: 10px; color: #888; letter-spacing: 0.04em; }
+    .tx-topbar-right { display: flex; gap: 14px; }
+
+    .tx-header { text-align: center; padding: 2rem 0 1rem; border-bottom: 2px solid #111; }
+    .tx-logo { font-family: 'DM Serif Display', serif; font-size: 68px; font-weight: 400; letter-spacing: -2px; line-height: 1; color: #111; cursor: pointer; }
+    .tx-logo span { color: #D4FF00; -webkit-text-stroke: 1px #000; }
+    .tx-tagline { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #888; margin-top: 6px; }
+
+    .tx-nav { display: flex; justify-content: center; flex-wrap: wrap; padding: 0.6rem 0; border-bottom: 0.5px solid #ddd; }
+    .tx-nav a { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; color: #111; padding: 4px 12px; transition: background 0.15s; cursor: pointer; }
+    .tx-nav a:hover { background: #D4FF00; color: #000; }
+    .tx-nav a.active { background: #000; color: #D4FF00; }
+
+    .tx-ticker { background: #000; color: #D4FF00; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.08em; padding: 6px 0; margin-top: 1.5rem; overflow: hidden; white-space: nowrap; }
+    .tx-ticker-inner { display: inline-block; animation: ticker 22s linear infinite; }
+    @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+    .tx-dot { margin: 0 18px; opacity: 0.5; }
+
+    .tx-tag { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: #fff; background: #000; padding: 2px 7px; display: inline-block; margin-bottom: 8px; }
+    .tx-tag.culture    { background: #D4FF00; color: #000; }
+    .tx-tag.music      { background: #FF3CAC; color: #fff; }
+    .tx-tag.opinion    { background: #111;    color: #fff; }
+    .tx-tag.sports     { background: #00C9A7; color: #000; }
+    .tx-tag.debate     { background: #FF6B35; color: #fff; }
+    .tx-tag.literature { background: #7B61FF; color: #fff; }
+    .tx-tag.politics   { background: #222;    color: #fff; }
+
+    .tx-headline-xl { font-family: 'DM Serif Display', serif; font-size: 32px; line-height: 1.15; font-weight: 400; color: #111; margin-bottom: 10px; cursor: pointer; }
+    .tx-headline-xl:hover { text-decoration: underline; text-decoration-color: #D4FF00; }
+    .tx-headline-md { font-family: 'DM Serif Display', serif; font-size: 19px; line-height: 1.2; font-weight: 400; color: #111; margin-bottom: 8px; cursor: pointer; }
+    .tx-headline-md:hover { text-decoration: underline; text-decoration-color: #D4FF00; }
+    .tx-headline-sm { font-family: 'DM Serif Display', serif; font-size: 15px; line-height: 1.25; font-weight: 400; color: #111; margin-bottom: 6px; cursor: pointer; }
+    .tx-headline-sm:hover { text-decoration: underline; text-decoration-color: #D4FF00; }
+
+    .tx-dek { font-size: 13px; line-height: 1.6; color: #666; margin-bottom: 10px; }
+    .tx-byline { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.08em; color: #888; margin-top: 8px; }
+
+    .tx-img-block { width: 100%; height: 200px; background: #f0f0f0; margin-bottom: 14px; display: flex; align-items: center; justify-content: center; }
+    .tx-img-sm { width: 100%; height: 100px; background: #f5f5f5; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; }
+    .tx-img-label { font-family: 'Space Mono', monospace; font-size: 9px; color: #bbb; text-transform: uppercase; letter-spacing: 0.1em; }
+
+    .tx-footer { margin-top: 2rem; padding-top: 1rem; border-top: 2px solid #111; display: flex; justify-content: space-between; align-items: center; }
+    .tx-footer-logo { font-family: 'DM Serif Display', serif; font-size: 18px; }
+    .tx-footer-logo span { color: #D4FF00; -webkit-text-stroke: 1px #000; }
+    .tx-footer-txt { font-family: 'Space Mono', monospace; font-size: 9px; color: #888; letter-spacing: 0.08em; }
+    .tx-footer-admin { font-family: 'Space Mono', monospace; font-size: 9px; color: #ccc; cursor: pointer; letter-spacing: 0.06em; text-decoration: none; }
+    .tx-footer-admin:hover { color: #888; }
+
+    .tx-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; margin-top: 2rem; border: 0.5px solid #ddd; }
+    .tx-featured { grid-column: 1 / 3; grid-row: 1; padding: 1.5rem; border-right: 0.5px solid #ddd; border-bottom: 0.5px solid #ddd; }
+    .tx-sidebar { grid-column: 3; grid-row: 1 / 3; display: flex; flex-direction: column; }
+    .tx-sidebar-item { padding: 1.2rem; border-bottom: 0.5px solid #ddd; flex: 1; }
+    .tx-sidebar-item:last-child { border-bottom: none; }
+    .tx-bottom-row { grid-column: 1 / 3; grid-row: 2; display: grid; grid-template-columns: 1fr 1fr; }
+    .tx-card { padding: 1.2rem 1.5rem; border-right: 0.5px solid #ddd; }
+    .tx-card:last-child { border-right: none; }
+
+    #page-article { display: none; }
+    .art-back { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; color: #888; margin: 1.5rem 0 1rem; display: inline-block; }
+    .art-back:hover { color: #111; }
+    .art-header { border-bottom: 2px solid #111; padding-bottom: 1.5rem; margin-bottom: 2rem; }
+    .art-title { font-family: 'DM Serif Display', serif; font-size: 42px; line-height: 1.1; font-weight: 400; margin: 12px 0; }
+    .art-dek { font-size: 16px; line-height: 1.6; color: #555; margin-bottom: 12px; }
+    .art-byline-line { font-family: 'Space Mono', monospace; font-size: 10px; color: #888; letter-spacing: 0.06em; }
+    .art-body { font-size: 17px; line-height: 1.85; color: #222; max-width: 660px; }
+    .art-body p { margin-bottom: 1.4em; }
+
+    #page-category { display: none; }
+    .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 1.5rem; border: 0.5px solid #ddd; }
+    .cat-card { padding: 1.5rem; border-right: 0.5px solid #ddd; border-bottom: 0.5px solid #ddd; cursor: pointer; }
+    .cat-card:nth-child(even) { border-right: none; }
+    .cat-card:hover { background: #fafafa; }
+    .cat-empty { font-family: 'Space Mono', monospace; font-size: 11px; color: #aaa; padding: 2rem; letter-spacing: 0.08em; }
+
+    .loading { font-family: 'Space Mono', monospace; font-size: 11px; color: #aaa; padding: 3rem 0; text-align: center; letter-spacing: 0.1em; }
+
+    @media (max-width: 640px) {
+      .tx-grid { grid-template-columns: 1fr; }
+      .tx-featured { grid-column: 1; border-right: none; }
+      .tx-sidebar { grid-column: 1; grid-row: auto; }
+      .tx-bottom-row { grid-column: 1; grid-template-columns: 1fr; }
+      .tx-card { border-right: none; border-bottom: 0.5px solid #ddd; }
+      .tx-logo { font-size: 44px; }
+      .cat-grid { grid-template-columns: 1fr; }
+      .cat-card { border-right: none; }
+      .art-title { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+<div class="tx-wrap">
+
+  <div class="tx-topbar">
+    <span id="topbar-date"></span>
+    <div class="tx-topbar-right"><span>Issue No. 001</span><span>testxtrialx.netlify.app</span></div>
+  </div>
+
+  <div class="tx-header">
+    <div class="tx-logo" onclick="showHome()">TEST<span>X</span></div>
+    <div class="tx-tagline">Independent writing — culture, politics, debate &amp; beyond</div>
+  </div>
+
+  <nav class="tx-nav" id="main-nav">
+    <a onclick="showHome()" class="active" data-cat="all">All</a>
+    <a onclick="showCategory('culture')" data-cat="culture">Culture</a>
+    <a onclick="showCategory('politics')" data-cat="politics">Politics</a>
+    <a onclick="showCategory('opinion')" data-cat="opinion">Opinion</a>
+    <a onclick="showCategory('sports')" data-cat="sports">Sports</a>
+    <a onclick="showCategory('literature')" data-cat="literature">Literature</a>
+    <a onclick="showCategory('music')" data-cat="music">Music</a>
+    <a onclick="showCategory('debate')" data-cat="debate">Debate</a>
+  </nav>
+
+  <!-- HOME -->
+  <div id="page-home">
+    <div class="tx-ticker">
+      <span class="tx-ticker-inner">
+        NEW ISSUE OUT NOW <span class="tx-dot">◆</span> CULTURE &amp; COLLAPSE <span class="tx-dot">◆</span> WHO OWNS THE INTERNET? <span class="tx-dot">◆</span> THE RETURN OF THE LONG READ <span class="tx-dot">◆</span> DEBUT COLUMN: ON CITIES AND LONELINESS <span class="tx-dot">◆</span> MUSIC SECTION COMING SOON <span class="tx-dot">◆</span>
+      </span>
+    </div>
+    <div id="home-grid"></div>
+  </div>
+
+  <!-- CATEGORY -->
+  <div id="page-category">
+    <div style="margin-top:1.5rem; display:flex; align-items:baseline; gap:12px;">
+      <span id="cat-title" style="font-family:'DM Serif Display',serif; font-size:28px;"></span>
+      <span id="cat-count" style="font-family:'Space Mono',monospace; font-size:10px; color:#aaa;"></span>
+    </div>
+    <div id="cat-grid" class="cat-grid"></div>
+  </div>
+
+  <!-- ARTICLE -->
+  <div id="page-article">
+    <span class="art-back" onclick="goBack()">← Back</span>
+    <div class="art-header">
+      <div id="art-tag"></div>
+      <div id="art-title" class="art-title"></div>
+      <div id="art-dek" class="art-dek"></div>
+      <div id="art-byline" class="art-byline-line"></div>
+    </div>
+    <div id="art-body" class="art-body"></div>
+  </div>
+
+  <div class="tx-footer">
+    <div class="tx-footer-logo">TEST<span>X</span></div>
+    <div class="tx-footer-txt">Independent · Est. 2026 · All rights reserved</div>
+    <a href="/admin" class="tx-footer-admin">admin</a>
+  </div>
+
+</div>
+<script>
+  // ── Seed articles (shown until you publish your own) ──────────────────────
+  const SEED = [
+    { id:'s1', title:'The internet never forgot — it just stopped caring', dek:'A decade after the first meme went viral, we explore what it means to live online in an era of permanent, numbingly fast forgetting.', category:'culture', author:'Staff Writer', date:'19 Apr 2026', body:'We used to say the internet never forgets. It was meant as a warning — post something embarrassing and it lives forever, searchable, screenshot-able, eternal. But spend a week online now and you will notice something stranger has happened. The internet remembers everything and cares about almost none of it.\n\nThe feed moves so fast that a story which dominates a Tuesday morning is completely gone by Tuesday afternoon. Not deleted. Not retracted. Simply buried under the next wave of content, the next outrage, the next moment of collective attention.\n\nThis is the paradox of digital memory in 2026. The archive is infinite. The attention span is not. And so we live in a world of permanent record and permanent forgetting at the same time.\n\nWhat does that do to us? To the stories we tell, the mistakes we make, the people we hold accountable? These are not rhetorical questions. They are the questions that define what kind of culture we are building.' },
+    { id:'s2', title:'Democracy is not in crisis — it just looks different now', dek:'On participation, disillusionment, and why cynicism is the easy answer.', category:'opinion', author:'Staff Writer', date:'18 Apr 2026', body:'Every few years someone publishes a book declaring the death of democracy. It is a reliable genre. The covers are dark, the tone is urgent, the sales are strong.\n\nAnd yet here we are. Elections still happen. Governments still change. Courts still occasionally surprise us. The infrastructure of democracy is battered, no question — but the reports of its death have been greatly exaggerated.\n\nWhat has changed is participation and trust. People vote less, not everywhere, but in enough places to worry about. They trust institutions less. They believe their vote matters less. And that erosion of belief is its own kind of crisis, distinct from the formal machinery breaking down.\n\nThe challenge is not to save democracy in the abstract. It is to make it feel real again to people for whom it has become an abstraction.' },
+    { id:'s3', title:'Norwegian underground: the sounds nobody is listening to yet', dek:'A guide to the artists shaping the next wave of Nordic music.', category:'music', author:'Staff Writer', date:'17 Apr 2026', body:'There is a corner of Oslo that does not care what the rest of the world thinks. Small venues, small runs, records pressed in editions of three hundred. Music made not for playlists but for rooms.\n\nNorwegian underground music has always operated this way. The country is small enough that artists cannot survive on local attention alone, but proud enough not to chase external approval too eagerly. The result is a scene that moves on its own logic.\n\nRight now that logic is producing something genuinely interesting. Artists blending folk structures with electronic production, or stripping everything back to voice and very little else. It is not easy listening. It is not meant to be.' },
+    { id:'s4', title:'What football taught me about failure', dek:'A personal essay on the pitch, the crowd, and the specific sadness of a near-miss.', category:'sports', author:'Staff Writer', date:'14 Apr 2026', body:'The first thing football teaches you is that you will lose. Not eventually. Regularly. Even the best teams in the world lose a third of their games. Even the best players in the world miss. The sport is structured around failure in a way that almost nothing else in life is.\n\nI grew up playing and then watching, and at some point the two activities merged into the same education. How to want something and not get it. How to try again. How to sit in the silence after a near-miss and resist the urge to explain it away.\n\nThe near-miss is a special category of pain. A loss is clean. You process it and move on. But the near-miss lingers because it contains the ghost of what could have happened.' },
+    { id:'s5', title:'The quiet election nobody talked about', dek:'Local politics shapes daily life more than any national headline — so why do we ignore it?', category:'politics', author:'Staff Writer', date:'13 Apr 2026', body:'Last autumn, a local council in a mid-sized European city voted on a zoning decision that will determine where five thousand families live for the next thirty years. The meeting lasted four hours. Twelve people attended.\n\nThe same week, a national politician said something mildly provocative on television. It dominated the news cycle for three days.\n\nThis is not a new observation. Journalists and political scientists have been making it for decades. Local politics is where decisions are made. National politics is where attention goes. The gap between the two is where a great deal of civic life quietly falls apart.' },
+    { id:'s6', title:'The short story is the most honest form of fiction', dek:'On compression, precision, and why the short form demands more than the novel.', category:'literature', author:'Staff Writer', date:'15 Apr 2026', body:'A novel can afford to be wrong for a hundred pages. It can meander, contradict itself, lose the thread and find it again. The reader will forgive this because the form allows it. There is time.\n\nThe short story has no such luxury. Every sentence is doing multiple jobs. Every word that does not earn its place weakens the whole. It is the most unforgiving form in fiction, which is probably why it is also, at its best, the most precise.\n\nPrecision is not the same as brevity. Some of the most precise writers are expansive. What precision means in fiction is the quality of attention — the sense that nothing is there by accident, that every detail has been chosen for a reason even if that reason is not immediately visible.' }
+  ];
+
+  let ARTICLES = [];
+  let lastPage = 'home';
+  let lastCat  = 'all';
+
+  // ── Parse markdown frontmatter from CMS files ─────────────────────────────
+  function parseFrontmatter(text) {
+    const match = text.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
+    if (!match) return null;
+    const meta = {};
+    match[1].split('\n').forEach(line => {
+      const i = line.indexOf(':');
+      if (i > -1) {
+        const key = line.slice(0, i).trim();
+        const val = line.slice(i + 1).trim().replace(/^["']|["']$/g, '');
+        meta[key] = val;
+      }
+    });
+    meta.body = match[2].trim();
+    return meta;
+  }
+
+  // ── Load articles from _articles/ folder (written by CMS) ────────────────
+  async function loadArticles() {
+    try {
+      const res = await fetch('/_articles/index.json');
+      if (!res.ok) throw new Error();
+      const files = await res.json();
+      const parsed = await Promise.all(files.map(async f => {
+        try {
+          const r = await fetch(`/_articles/${f}`);
+          const text = await r.text();
+          const data = parseFrontmatter(text);
+          if (!data) return null;
+          return { id: f.replace('.md',''), title: data.title, dek: data.dek||'', category: data.category||'culture', author: data.author||'Staff Writer', date: data.date||'', body: data.body };
+        } catch(e) { return null; }
+      }));
+      const valid = parsed.filter(Boolean);
+      ARTICLES = valid.length > 0 ? valid : SEED;
+    } catch(e) {
+      ARTICLES = SEED;
+    }
+    showHome();
+  }
+
+  function readTime(body) { return Math.max(1, Math.round((body||'').split(' ').length / 200)); }
+
+  function setActiveNav(cat) {
+    document.querySelectorAll('.tx-nav a').forEach(a => a.classList.toggle('active', a.dataset.cat === cat));
+  }
+
+  function hideAll() {
+    ['page-home','page-category','page-article'].forEach(id => document.getElementById(id).style.display = 'none');
+  }
+
+  function showHome() {
+    hideAll();
+    lastPage = 'home'; lastCat = 'all';
+    setActiveNav('all');
+    const arts = ARTICLES;
+    if (arts.length === 0) {
+      document.getElementById('home-grid').innerHTML = `<p class="loading">No articles yet.</p>`;
+      document.getElementById('page-home').style.display = 'block';
+      return;
+    }
+    const f = arts[0], side = arts.slice(1,5), bot = arts.slice(5,7);
+    document.getElementById('home-grid').innerHTML = `
+      <div class="tx-grid">
+        <div class="tx-featured">
+          <div class="tx-img-block"><span class="tx-img-label">[ Featured image ]</span></div>
+          <span class="tx-tag ${f.category}">${f.category}</span>
+          <div class="tx-headline-xl" onclick="showArticle('${f.id}')">${f.title}</div>
+          <p class="tx-dek">${f.dek}</p>
+          <div class="tx-byline">By ${f.author} &nbsp;·&nbsp; ${f.date} &nbsp;·&nbsp; ${readTime(f.body)} min read</div>
+        </div>
+        <div class="tx-sidebar">
+          ${side.map(a=>`<div class="tx-sidebar-item">
+            <span class="tx-tag ${a.category}">${a.category}</span>
+            <div class="tx-headline-sm" onclick="showArticle('${a.id}')">${a.title}</div>
+            <div class="tx-byline">${a.date} · ${readTime(a.body)} min</div>
+          </div>`).join('')}
+        </div>
+        <div class="tx-bottom-row">
+          ${bot.map(a=>`<div class="tx-card">
+            <div class="tx-img-sm"><span class="tx-img-label">[ Image ]</span></div>
+            <span class="tx-tag ${a.category}">${a.category}</span>
+            <div class="tx-headline-md" onclick="showArticle('${a.id}')">${a.title}</div>
+            <p class="tx-dek">${a.dek}</p>
+            <div class="tx-byline">${a.date} · ${readTime(a.body)} min</div>
+          </div>`).join('')}
+        </div>
+      </div>`;
+    document.getElementById('page-home').style.display = 'block';
+    window.scrollTo(0,0);
+  }
+
+  function showCategory(cat) {
+    hideAll();
+    lastPage = 'category'; lastCat = cat;
+    setActiveNav(cat);
+    const arts = ARTICLES.filter(a => a.category === cat);
+    document.getElementById('cat-title').textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+    document.getElementById('cat-count').textContent = `${arts.length} article${arts.length!==1?'s':''}`;
+    document.getElementById('cat-grid').innerHTML = arts.length === 0
+      ? `<p class="cat-empty">No articles in this category yet.</p>`
+      : arts.map(a=>`<div class="cat-card" onclick="showArticle('${a.id}')">
+          <span class="tx-tag ${a.category}">${a.category}</span>
+          <div class="tx-headline-md" style="margin-top:4px;">${a.title}</div>
+          <p class="tx-dek" style="margin-top:8px;">${a.dek}</p>
+          <div class="tx-byline">${a.date} · ${readTime(a.body)} min read</div>
+        </div>`).join('');
+    document.getElementById('page-category').style.display = 'block';
+    window.scrollTo(0,0);
+  }
+
+  function showArticle(id) {
+    const art = ARTICLES.find(a => a.id === id);
+    if (!art) return;
+    hideAll();
+    document.getElementById('art-tag').innerHTML = `<span class="tx-tag ${art.category}">${art.category}</span>`;
+    document.getElementById('art-title').textContent = art.title;
+    document.getElementById('art-dek').textContent = art.dek;
+    document.getElementById('art-byline').textContent = `By ${art.author} · ${art.date} · ${readTime(art.body)} min read`;
+    document.getElementById('art-body').innerHTML = art.body.split(/\n\n+/).map(p=>`<p>${p.trim()}</p>`).join('');
+    document.getElementById('page-article').style.display = 'block';
+    window.scrollTo(0,0);
+  }
+
+  function goBack() {
+    if (lastPage === 'category') showCategory(lastCat);
+    else showHome();
+  }
+
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const now = new Date();
+  document.getElementById('topbar-date').textContent = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+
+  loadArticles();
+</script>
+</body>
+</html>
